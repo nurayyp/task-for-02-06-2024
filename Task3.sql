@@ -1,44 +1,39 @@
-CREATE DATABASE MoviesApp
-use MoviesApp
+CREATE DATABASE MovieApp
+use MovieApp
 CREATE TABLE Movies (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    Name NVARCHAR(255) NOT NULL,
-    ReleaseDate DATE NOT NULL,
-    IMDB FLOAT NOT NULL
+Id INT PRIMARY KEY IDENTITY(1,1),
+[Name] NVARCHAR(50) NOT NULL,
+ReleaseDate DATE NOT NULL,
+IMDB FLOAT NOT NULL
 )
 CREATE TABLE Actors (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    Name NVARCHAR(255) NOT NULL,
-    Surname NVARCHAR(255) NOT NULL
+Id INT PRIMARY KEY IDENTITY(1,1),
+Name NVARCHAR(50) NOT NULL,
+Surname NVARCHAR(50) NOT NULL
 )
 CREATE TABLE Genres (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    Name NVARCHAR(255) NOT NULL
+Id INT PRIMARY KEY IDENTITY(1,1),
+Name NVARCHAR(50) NOT NULL
 )
 CREATE TABLE MovieActors (
-    MovieId INT NOT NULL,
-    ActorId INT NOT NULL,
-    PRIMARY KEY (MovieId, ActorId),
-    FOREIGN KEY (MovieId) REFERENCES Movies(Id),
-    FOREIGN KEY (ActorId) REFERENCES Actors(Id)
+Id INT PRIMARY KEY IDENTITY(1,1),
+MovieId INT FOREIGN KEY REFERENCES Movies(Id),
+ActorId INT FOREIGN KEY REFERENCES Actors(Id)
 )
 CREATE TABLE MovieGenres (
-    MovieId INT NOT NULL,
-    GenreId INT NOT NULL,
-    PRIMARY KEY (MovieId, GenreId),
-    FOREIGN KEY (MovieId) REFERENCES Movies(Id),
-    FOREIGN KEY (GenreId) REFERENCES Genres(Id)
+Id INT PRIMARY KEY IDENTITY(1,1),
+MovieId INT FOREIGN KEY REFERENCES Movies(Id),
+GenreId INT FOREIGN KEY REFERENCES Genres(Id)
 )
-INSERT INTO Movies (Name, ReleaseDate, IMDB)
-VALUES
+INSERT INTO Movies
+VALUES ('Venom: The Last Dance','2024-10-24',9.7),
 ('The Shawshank Redemption', '1994-09-23', 9.3),
 ('The Godfather', '1972-03-24', 9.2),
 ('The Dark Knight', '2008-07-18', 9.0),
 ('Pulp Fiction', '1994-10-14', 8.9),
 ('The Lord of the Rings: The Return of the King', '2003-12-17', 8.9)
-INSERT INTO Actors (Name, Surname)
-VALUES
-('Tim', 'Robbins'),
+INSERT INTO Actors
+VALUES ('Tim', 'Robbins'),
 ('Morgan', 'Freeman'),
 ('Marlon', 'Brando'),
 ('Al', 'Pacino'),
@@ -48,16 +43,14 @@ VALUES
 ('Samuel', 'Jackson'),
 ('Elijah', 'Wood'),
 ('Ian', 'McKellen')
-INSERT INTO Genres (Name)
-VALUES
-('Drama'),
+INSERT INTO Genres
+VALUES ('Drama'),
 ('Crime'),
 ('Action'),
 ('Adventure'),
 ('Fantasy')
-INSERT INTO MovieActors (MovieId, ActorId)
-VALUES
-(1, 1),
+INSERT INTO MovieActors
+VALUES (1, 1),
 (1, 2),
 (2, 3),
 (2, 4), 
@@ -67,25 +60,24 @@ VALUES
 (4, 8),
 (5, 9),
 (5, 10)
-INSERT INTO MovieGenres (MovieId, GenreId)
-VALUES
-(1, 1),
+INSERT INTO MovieGenres
+VALUES (1, 1),
 (2, 2),
 (3, 3),
 (4, 2),
 (5, 4), 
 (5, 5)
 
-SELECT Actors.Name, Actors.Surname, COUNT(MovieActors.ActorId) AS Count FROM Actors 
+SELECT Actors.Name, Actors.Surname, COUNT(MovieActors.ActorId) AS MovieCount FROM Actors 
 JOIN MovieActors ON Actors.Id = MovieActors.ActorId
 GROUP BY Actors.Name, Actors.Surname
-ORDER BY Count DESC
+ORDER BY MovieCount DESC
 
 SELECT Genres.Name AS Genre, COUNT(MovieGenres.MovieId) AS MovieCount FROM Genres 
 JOIN MovieGenres ON Genres.Id = MovieGenres.GenreId
 GROUP BY Genres.Name
 
-SELECT Name, ReleaseDate FROM Movies
+SELECT [Name], ReleaseDate FROM Movies
 WHERE ReleaseDate > GETDATE()
 ORDER BY ReleaseDate
 
